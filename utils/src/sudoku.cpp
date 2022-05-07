@@ -1,0 +1,123 @@
+#include <vector>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include "string_split/string_split.hpp"
+#include "utils/sudoku.hpp"
+
+
+using std::vector;
+using std::ifstream;
+using std::string;
+using std::cout;
+using std::endl;
+using std::find;
+
+Sudoku::Sudoku()
+{
+    sudoku = {
+        {1, 0, 3, 4, 5, 6, 0, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 0, 9},
+        {1, 0, 3, 4, 5, 6, 7, 8, 0},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 0, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 0, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9}
+    };
+
+}
+
+
+Sudoku::Sudoku(string s)
+{
+    ifstream in;
+    in.open(s);
+    string line;
+
+
+    sudoku = {
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9},
+        {1, 2, 3, 4, 5, 6, 7, 8, 9}
+    };
+
+    for (int row = 0; row != 9; ++row)
+    {
+        getline(in, line);
+        vector<int> lst {split_string(line)};
+
+        sudoku[row] = lst;
+
+    }
+}
+
+void Sudoku::print_sudoku()
+{
+    cout << "+---+---+---+---+---+---+---+---+---+" << endl;
+    for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i)
+    {
+        cout << "|";
+        vector<int> current_line {*i};
+
+        for (vector<int>::const_iterator j = current_line.begin(); j != current_line.end(); ++j)
+        {
+            if (*j == 0)
+                cout << "   |";
+            else
+                cout << " " << *j << " |";   
+        }
+        cout << endl;
+        cout << "+---+---+---+---+---+---+---+---+---+" << endl;
+    }
+}
+
+bool verify_vector(vector<int> vec)
+{
+    if (vec.size() != 9) {
+        return false;
+    }
+
+    for (int i = 1; i != 10; ++i){
+        if (find(vec.begin(), vec.end(), i) == vec.end()){
+            return false;
+        }    
+    }
+
+    return true;
+}
+
+vector<int> Sudoku::col_to_vec(int col)
+{
+    vector<int> ret;
+    for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i){
+        ret.push_back((*i)[col]);
+    }
+
+    return ret;
+}
+
+bool Sudoku::is_solved()
+{
+    for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i){
+        if (!verify_vector(*i)){
+            return false;
+        }
+    }
+
+    for (int i = 0; i != 9; ++i){
+        vector<int> col_vec {col_to_vec(i)};
+        if (!verify_vector(col_vec)){
+            return false;
+        }
+    }
+
+    return true;
+}
