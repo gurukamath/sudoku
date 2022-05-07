@@ -104,6 +104,20 @@ vector<int> Sudoku::col_to_vec(int col)
     return ret;
 }
 
+vector<int> Sudoku::block_to_vec(int row, int col)
+{
+    vector<int> ret;
+    for (int i = 3 * row; i != 3 * (row + 1); ++i)
+    {
+        for (int j = 3 * col; j != 3 * (col + 1); ++j)
+        {
+            ret.push_back(sudoku[i][j]);
+        }
+    }
+
+    return ret;
+}
+
 bool Sudoku::is_solved()
 {
     for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i){
@@ -116,6 +130,18 @@ bool Sudoku::is_solved()
         vector<int> col_vec {col_to_vec(i)};
         if (!verify_vector(col_vec)){
             return false;
+        }
+    }
+
+    for (int i; i != 3; ++i)
+    {
+        for (int j; j != 3; ++j)
+        {
+            vector<int> block_vec {block_to_vec(i, j)};
+            if (!verify_vector(block_vec))
+            {
+                return false;
+            }
         }
     }
 
