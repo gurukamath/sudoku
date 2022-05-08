@@ -28,11 +28,11 @@ vector<vector<int> > prebuilt = {
 vector<vector<int> > prebuilt_zero = {9, {0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 Sudoku::Sudoku()
-    : sudoku{prebuilt} {}
+    : sudoku{prebuilt}, alternate{false} {}
 
 
 Sudoku::Sudoku(string s)
-    : sudoku{prebuilt_zero}
+    : sudoku{prebuilt_zero}, alternate{false}
 {
     ifstream in;
     in.open(s);
@@ -139,7 +139,58 @@ bool Sudoku::is_solved()
     return true;
 }
 
-vector<Candidate> Sudoku::find_all_candidates()
+bool is_repeated(vector<int>& vec, int val)
+{
+    vector<int>::iterator first = find(vec.begin(), vec.end(), val);
+
+    if (first == vec.end()){
+        return false;
+    } else {
+        vector<int>::iterator second = find(first + 1, vec.end(), val);
+        if (second == vec.end()){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+bool Sudoku::is_valid()
+{
+    for (int row = 0; row != 9; ++row){
+        for (int val = 1; val != 10; ++val){
+            if (is_repeated(sudoku[row], val)){
+                return false;
+            }   
+        }
+    }
+
+    for (int col = 0; col != 9; ++col){
+        vector<int> col_vec {col_to_vec(col)};
+        for (int val = 1; val != 10; ++val){
+            if (is_repeated(col_vec, val)){
+                return false;
+            }   
+        }
+    }
+
+    for (int block_row = 0; block_row != 3; ++block_row)
+    {
+        for (int block_col = 0; block_col != 3; ++block_col)
+        {
+            vector<int> block_vec {block_to_vec(block_row, block_col)};
+            for (int val = 1; val != 10; ++val){
+                if (is_repeated(block_vec, val)){
+                    return false;
+                }   
+            }
+        }
+    }
+
+    return true;
+}
+
+vector<Candidate> Sudoku::find_all_candidates(vector<Candidate>& other)
 {
     vector<Candidate> ret;
     for (int i = 0; i != 9; ++i)
@@ -148,12 +199,22 @@ vector<Candidate> Sudoku::find_all_candidates()
         {
             if (sudoku[i][j] == 0){
                 Candidate candidate {find_candidates(i, j)};
-                if (candidate.candidate_values.size() == 1) ret.push_back(candidate);
+                if (candidate.candidate_values.size() == 1) {
+                    ret.push_back(candidate);
+                } else if (candidate.candidate_values.size() == 2) {
+                    other.push_back(candidate);
+                }
             }
         }
     }
 
     return ret;
+}
+
+vector<Candidate> Sudoku::find_all_candidates()
+{
+    vector<Candidate> other;
+    return find_all_candidates(other);
 }
 
 void filter_candidate_values(vector<int> vec, Candidate& candidate)
@@ -180,11 +241,32 @@ Candidate Sudoku::find_candidates(int row, int col)
     return ret;
 }
 
+int nrand(int n)
+{
+    const int bucket_size = RAND_MAX / n;
+
+    int r;
+
+    do r = rand() / bucket_size;
+    while (r >= n);
+
+    return r;
+}
+
 
 void Sudoku::solve()
 {
-    if (is_solved())
-    {
+    if (!is_valid()){
+        if (!alternate){
+            cout << "The given Sudoku is invalid" << endl;
+        } else {
+            alternate = false;
+            sudoku = alternate_sudoku;
+
+            sudoku[alternate_candidate.row][alternate_candidate.col] = alternate_candidate.candidate_values[1];
+            solve();
+        }
+    } else if (is_solved()){
         cout << "\n***********************************************" << endl;
         cout << "*                                             *" << endl;
         cout << "* The sudoku has been solved successfully!!!! *" << endl;
@@ -209,11 +291,30 @@ void Sudoku::solve()
                     }
                 }
             solve();
-        }
-        else
-        {
-            cout << "Unable to make any further progress using the current algorithm. The current status is as follows." << endl;
-            print_sudoku();
+        } else {    
+            if (!alternate){
+                alternate_sudoku = sudoku;
+            } else {
+                sudoku = alternate_sudoku;
+            }
+
+            vector<Candidate> other_candidate;
+            vector<Candidate> _ {find_all_candidates(other_candidate)};
+
+            if (other_candidate.size() > 0){
+                int index = nrand(other_candidate.size());
+
+                alternate = true;
+                alternate_candidate = other_candidate[index];
+
+                sudoku[alternate_candidate.row][alternate_candidate.col] = alternate_candidate.candidate_values[0];
+                solve();
+            }
+            else
+            {
+                cout << "Unable to make any further progress using the current algorithm. The current status is as follows." << endl;
+                print_sudoku();
+            }
         }
     }
 }
