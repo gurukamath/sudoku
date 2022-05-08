@@ -137,6 +137,39 @@ bool Sudoku::is_solved()
     return true;
 }
 
+vector<int> find_missing_values(vector<int> vec)
+{
+    vector<int> ret;
+    for (int i = 1; i != 10; ++i){
+        if (find(vec.begin(), vec.end(), i) == vec.end()){
+            ret.push_back(i);
+        } 
+    }
+
+    return ret;
+}
+
+
+int num_unsolved_vector(vector<int> vec, vector<int>& positions)
+{
+    int count {0};
+    for (int j = 0; j != 9; ++j)
+    {
+        if (vec[j] == 0){
+            ++count;
+            positions.push_back(j);
+        }
+    }
+
+    return count;
+}
+
+int num_unsolved_vector(vector<int> vec)
+{
+    vector<int> positions;
+
+    return num_unsolved_vector(vec, positions);
+}
 
 int Sudoku::num_unsolved()
 {
@@ -144,10 +177,8 @@ int Sudoku::num_unsolved()
 
     for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i)
     {
-        for (vector<int>::const_iterator j = (*i).begin(); j != (*i).end(); ++j)
-        {
-            if ((*j) == 0) ++count;
-        }
+        vector<int> positions;
+        count += num_unsolved_vector(*i, positions);
     }
 
     return count;
