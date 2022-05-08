@@ -146,7 +146,10 @@ vector<Candidate> Sudoku::find_all_candidates()
     {
         for (int j = 0; j != 9; ++j)
         {
-            if (sudoku[i][j] == 0) ret.push_back(find_candidates(i, j));
+            if (sudoku[i][j] == 0){
+                Candidate candidate {find_candidates(i, j)};
+                if (candidate.candidate_values.size() == 1) ret.push_back(candidate);
+            }
         }
     }
 
@@ -193,24 +196,18 @@ void Sudoku::solve()
     else
     {
         // cout << "Starting iteration...." << endl;
-        vector<Candidate> before {find_all_candidates()};
+        vector<Candidate> candidates {find_all_candidates()};
 
-        int unsolved_before = before.size();
-
-        for (vector<Candidate>::const_iterator i = before.begin(); i != before.end(); ++i)
+        if (candidates.size() > 0)
         {
-            if (i->candidate_values.size() == 1)
-            {
-                sudoku[i->row][i->col] = i->candidate_values[0];
-                // cout << "Value " << i->candidate_values[0] << " has been set at row " << i->row << " column " << i->col << endl;
-            }
-        }
-
-        vector<Candidate> after {find_all_candidates()};
-        int unsolved_after = after.size();
-
-        if (unsolved_after < unsolved_before)
-        {
+            for (vector<Candidate>::const_iterator i = candidates.begin(); i != candidates.end(); ++i)
+                {
+                    if (i->candidate_values.size() == 1)
+                    {
+                        sudoku[i->row][i->col] = i->candidate_values[0];
+                        // cout << "Value " << i->candidate_values[0] << " has been set at row " << i->row << " column " << i->col << endl;
+                    }
+                }
             solve();
         }
         else
