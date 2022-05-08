@@ -1,16 +1,34 @@
-#include <vector>
+#include <iostream>
+
+#include "CLI/CLI.hpp"
 #include "utils/sudoku.hpp"
 
 using std::vector;
 
 
-int main()
+int main(int argc, char** argv)
 {
-    
-    Sudoku new_sudoku("example.txt");
-    // Sudoku new_sudoku;
+    CLI::App app{"Sudoku solver"};
 
-    new_sudoku.solve();
+    std::string filename = "";
+    app.add_option("-f,--file", filename, "input the file name from which the sudoku should be read.");
+
+    CLI11_PARSE(app, argc, argv);
+    
+    try {
+        Sudoku new_sudoku(filename);
+        new_sudoku.solve();
+    }
+    catch (std::runtime_error& err) {
+        if (filename == ""){
+            std::cout << "No file specified. Proceeding to solve pre-defined sudoku..." << std::endl;
+        } else {
+            std::cout << err.what() << " Proceeding to solve pre-defined sudoku..." << std::endl;
+        }
+
+        Sudoku new_sudoku;
+        new_sudoku.solve();
+    }
 
     return 0;
 

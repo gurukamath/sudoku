@@ -11,4 +11,6 @@ add_executable(
 
 target_link_libraries(${PROJECT_NAME} utils)
 
+target_include_directories(${PROJECT_NAME} PRIVATE dependencies/CLI11/include)
+
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

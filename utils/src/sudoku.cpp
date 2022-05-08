@@ -36,6 +36,8 @@ Sudoku::Sudoku(string s)
 {
     ifstream in;
     in.open(s);
+    if (!in) throw std::runtime_error("The specified file " + s + " does not exist.");
+    
     string line;
 
     for (int row = 0; row != 9; ++row)
