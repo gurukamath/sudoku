@@ -17,6 +17,7 @@ class Sudoku
     Sudoku(std::string);
 
     bool is_solved();
+    int num_unsolved();
     void solve();
 
     void print_sudoku();

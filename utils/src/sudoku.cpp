@@ -136,3 +136,19 @@ bool Sudoku::is_solved()
 
     return true;
 }
+
+
+int Sudoku::num_unsolved()
+{
+    int count {0};
+
+    for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i)
+    {
+        for (vector<int>::const_iterator j = (*i).begin(); j != (*i).end(); ++j)
+        {
+            if ((*j) == 0) ++count;
+        }
+    }
+
+    return count;
+}
