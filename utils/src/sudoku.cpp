@@ -122,9 +122,9 @@ bool Sudoku::is_solved()
         }
     }
 
-    for (int i; i != 3; ++i)
+    for (int i = 0; i != 3; ++i)
     {
-        for (int j; j != 3; ++j)
+        for (int j = 0; j != 3; ++j)
         {
             vector<int> block_vec {block_to_vec(i, j)};
             if (!verify_vector(block_vec))
@@ -173,6 +173,50 @@ Candidate Sudoku::find_candidates(int row, int col)
     filter_candidate_values(block_to_vec(row/3, col/3), ret);
 
     return ret;
+}
+
+
+void Sudoku::solve()
+{
+    if (is_solved())
+    {
+        cout << "\n***********************************************" << endl;
+        cout << "*                                             *" << endl;
+        cout << "* The sudoku has been solved successfully!!!! *" << endl;
+        cout << "*       The solution is displayed below       *" << endl;
+        cout << "*                                             *" << endl;
+        cout << "***********************************************\n" << endl;
+        print_sudoku();
+    }
+    else
+    {
+        // cout << "Starting iteration...." << endl;
+        vector<Candidate> before {find_all_candidates()};
+
+        int unsolved_before = before.size();
+
+        for (vector<Candidate>::const_iterator i = before.begin(); i != before.end(); ++i)
+        {
+            if (i->candidate_values.size() == 1)
+            {
+                sudoku[i->row][i->col] = i->candidate_values[0];
+                // cout << "Value " << i->candidate_values[0] << " has been set at row " << i->row << " column " << i->col << endl;
+            }
+        }
+
+        vector<Candidate> after {find_all_candidates()};
+        int unsolved_after = after.size();
+
+        if (unsolved_after < unsolved_before)
+        {
+            solve();
+        }
+        else
+        {
+            cout << "Unable to make any further progress using the current algorithm. The current status is as follows." << endl;
+            print_sudoku();
+        }
+    }
 }
 
 
