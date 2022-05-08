@@ -137,49 +137,42 @@ bool Sudoku::is_solved()
     return true;
 }
 
-vector<int> find_missing_values(vector<int> vec)
+vector<Candidate> Sudoku::find_all_candidates()
 {
-    vector<int> ret;
-    for (int i = 1; i != 10; ++i){
-        if (find(vec.begin(), vec.end(), i) == vec.end()){
-            ret.push_back(i);
-        } 
+    vector<Candidate> ret;
+    for (int i = 0; i != 9; ++i)
+    {
+        for (int j = 0; j != 9; ++j)
+        {
+            if (sudoku[i][j] == 0) ret.push_back(find_candidates(i, j));
+        }
     }
 
     return ret;
 }
 
-
-int num_unsolved_vector(vector<int> vec, vector<int>& positions)
+void filter_candidate_values(vector<int> vec, Candidate& candidate)
 {
-    int count {0};
-    for (int j = 0; j != 9; ++j)
+    for (vector<int>::const_iterator i = vec.begin(); i != vec.end(); ++i)
     {
-        if (vec[j] == 0){
-            ++count;
-            positions.push_back(j);
+        vector<int>::iterator found {find(candidate.candidate_values.begin(), candidate.candidate_values.end(), *i)};
+        if (found != candidate.candidate_values.end()){
+            candidate.candidate_values.erase(found);
         }
     }
-
-    return count;
 }
 
-int num_unsolved_vector(vector<int> vec)
+Candidate Sudoku::find_candidates(int row, int col)
 {
-    vector<int> positions;
+    Candidate ret;
+    ret.row = row;
+    ret.col = col;
 
-    return num_unsolved_vector(vec, positions);
+    filter_candidate_values(sudoku[row], ret);
+    filter_candidate_values(col_to_vec(col), ret);
+    filter_candidate_values(block_to_vec(row/3, col/3), ret);
+
+    return ret;
 }
 
-int Sudoku::num_unsolved()
-{
-    int count {0};
 
-    for (vector<vector<int> >::const_iterator i = sudoku.begin(); i != sudoku.end(); ++i)
-    {
-        vector<int> positions;
-        count += num_unsolved_vector(*i, positions);
-    }
-
-    return count;
-}
