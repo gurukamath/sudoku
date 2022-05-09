@@ -7,13 +7,17 @@ struct Candidate {
     std::vector<int> candidate_values {1, 2, 3, 4, 5, 6, 7, 8, 9};
 };
 
+struct BackUp {
+    std::vector<std::vector<int> > sudoku_backup;
+    Candidate candidate_used;
+    int value_index_used {0};
+};
+
 class Sudoku
 {
     private:
     std::vector<std::vector<int> > sudoku;
-    std::vector<std::vector<int> > alternate_sudoku;
-    Candidate alternate_candidate;
-    bool alternate;
+    std::vector<BackUp> backups;
 
     void print_sudoku();
 
