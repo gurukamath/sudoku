@@ -16,29 +16,31 @@ struct BackUp {
 class Sudoku
 {
     private:
-    std::vector<std::vector<int> > sudoku;
-    std::vector<BackUp> backups;
+        std::vector<std::vector<int> > sudoku;
+        std::vector<BackUp> backups;
 
-    void print_sudoku();
+        void print_sudoku();
 
-    bool is_solved();
+        bool is_solved();
 
-    void solve_rows();
-    void solve_cols();
-    void solve_blocks();
+        void solve_rows();
+        void solve_cols();
+        void solve_blocks();
 
-    std::vector<int> col_to_vec(int);
-    std::vector<int> block_to_vec(int, int);
+        std::vector<int> col_to_vec(int);
+        std::vector<int> block_to_vec(int, int);
 
-    Candidate find_candidates(int, int);
-    std::vector<Candidate> find_all_candidates(int);
+        Candidate find_candidates(int, int);
+        std::vector<Candidate> find_all_candidates(int);
+
+        void process_invalid_state();
 
 
     public:
-    Sudoku();
-    Sudoku(std::string);
-    bool is_valid();
+        Sudoku();
+        Sudoku(std::string);
+        bool is_valid();
 
-    void solve();
+        void solve();
 
 };

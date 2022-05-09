@@ -190,7 +190,7 @@ bool Sudoku::is_valid()
     return true;
 }
 
-vector<Candidate> Sudoku::find_all_candidates(int n)
+vector<Candidate> Sudoku::find_all_candidates(int n = 99)
 {
     vector<Candidate> ret;
     for (int i = 0; i != 9; ++i)
@@ -199,7 +199,10 @@ vector<Candidate> Sudoku::find_all_candidates(int n)
         {
             if (sudoku[i][j] == 0){
                 Candidate candidate {find_candidates(i, j)};
-                if (candidate.candidate_values.size() == n) {
+                if (n == 99 && candidate.candidate_values.size() > 0){
+                    ret.push_back(candidate);
+                }
+                else if (candidate.candidate_values.size() == n) {
                     ret.push_back(candidate);
                 }
             }
@@ -245,27 +248,32 @@ int nrand(int n)
     return r;
 }
 
+void Sudoku::process_invalid_state(){
+    if (backups.size() == 0){
+        cout << "The given Sudoku is invalid" << endl;
+    } else {
+
+        while((backups.end() - 1)->value_index_used == 1)
+        {
+            backups.erase(backups.end() - 1);
+        }
+
+        vector<BackUp>::iterator end {backups.end() - 1};
+
+        end->value_index_used = 1;
+        sudoku = end->sudoku_backup;
+
+        sudoku[(end->candidate_used).row][(end->candidate_used).col] = (end->candidate_used).candidate_values[1];
+
+    }
+}
+
 
 void Sudoku::solve()
 {
     if (!is_valid()){
-        if (backups.size() == 0){
-            cout << "The given Sudoku is invalid" << endl;
-        } else {
-
-            while((backups.end() - 1)->value_index_used == 1)
-            {
-                backups.erase(backups.end() - 1);
-            }
-
-            vector<BackUp>::iterator end {backups.end() - 1};
-
-            end->value_index_used = 1;
-            sudoku = end->sudoku_backup;
-
-            sudoku[(end->candidate_used).row][(end->candidate_used).col] = (end->candidate_used).candidate_values[1];
+            process_invalid_state();
             solve();
-        }
     } else if (is_solved()){
         cout << "\n***********************************************" << endl;
         cout << "*                                             *" << endl;
@@ -296,6 +304,7 @@ void Sudoku::solve()
             delete candidates;
 
             vector<Candidate>* other_candidates = new vector<Candidate> {find_all_candidates(2)};
+            vector<Candidate>* all_candidates = new vector<Candidate> {find_all_candidates()};
 
             if (other_candidates->size() > 0){
                 
@@ -308,11 +317,21 @@ void Sudoku::solve()
 
                 sudoku[bu.candidate_used.row][bu.candidate_used.col] = bu.candidate_used.candidate_values[0];
                 delete other_candidates;
+                delete all_candidates;
+                solve();
+            }
+            else if (all_candidates->size() == 0)
+            {
+                delete other_candidates;
+                delete all_candidates;
+                process_invalid_state();
                 solve();
             }
             else
             {
                 delete other_candidates;
+                delete all_candidates;
+
                 cout << "Unable to make any further progress using the current algorithm. The current status is as follows." << endl;
                 print_sudoku();
             }
