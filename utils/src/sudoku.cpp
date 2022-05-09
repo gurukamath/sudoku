@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include "string_split/string_split.hpp"
 #include "utils/sudoku.hpp"
 
