@@ -26,9 +26,8 @@ class Sudoku
     std::vector<int> col_to_vec(int);
     std::vector<int> block_to_vec(int, int);
 
-    Candidate find_candidates(int, int);    
-    std::vector<Candidate> find_all_candidates(std::vector<Candidate>&);
-    std::vector<Candidate> find_all_candidates();
+    Candidate find_candidates(int, int);
+    std::vector<Candidate> find_all_candidates(int);
 
 
     public:

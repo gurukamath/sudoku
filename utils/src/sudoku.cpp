@@ -190,7 +190,7 @@ bool Sudoku::is_valid()
     return true;
 }
 
-vector<Candidate> Sudoku::find_all_candidates(vector<Candidate>& other)
+vector<Candidate> Sudoku::find_all_candidates(int n)
 {
     vector<Candidate> ret;
     for (int i = 0; i != 9; ++i)
@@ -199,22 +199,14 @@ vector<Candidate> Sudoku::find_all_candidates(vector<Candidate>& other)
         {
             if (sudoku[i][j] == 0){
                 Candidate candidate {find_candidates(i, j)};
-                if (candidate.candidate_values.size() == 1) {
+                if (candidate.candidate_values.size() == n) {
                     ret.push_back(candidate);
-                } else if (candidate.candidate_values.size() == 2) {
-                    other.push_back(candidate);
                 }
             }
         }
     }
 
     return ret;
-}
-
-vector<Candidate> Sudoku::find_all_candidates()
-{
-    vector<Candidate> other;
-    return find_all_candidates(other);
 }
 
 void filter_candidate_values(vector<int> vec, Candidate& candidate)
@@ -278,7 +270,7 @@ void Sudoku::solve()
     else
     {
         // cout << "Starting iteration...." << endl;
-        vector<Candidate> candidates {find_all_candidates()};
+        vector<Candidate> candidates {find_all_candidates(1)};
 
         if (candidates.size() > 0)
         {
@@ -298,8 +290,7 @@ void Sudoku::solve()
                 sudoku = alternate_sudoku;
             }
 
-            vector<Candidate> other_candidate;
-            vector<Candidate> _ {find_all_candidates(other_candidate)};
+            vector<Candidate> other_candidate {find_all_candidates(2)};
 
             if (other_candidate.size() > 0){
                 int index = nrand(other_candidate.size());
