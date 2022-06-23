@@ -41,22 +41,7 @@ Sudoku::Sudoku(string s) : sudoku{prebuilt_zero} {
 }
 
 void Sudoku::print_sudoku() {
-  cout << "+---+---+---+---+---+---+---+---+---+" << endl;
-  for (vector<vector<int>>::const_iterator i = sudoku.begin();
-       i != sudoku.end(); ++i) {
-    cout << "|";
-    vector<int> current_line{*i};
-
-    for (vector<int>::const_iterator j = current_line.begin();
-         j != current_line.end(); ++j) {
-      if (*j == 0)
-        cout << "   |";
-      else
-        cout << " " << *j << " |";
-    }
-    cout << endl;
-    cout << "+---+---+---+---+---+---+---+---+---+" << endl;
-  }
+  cout << "Default print. Should be overwritten" << endl;
 }
 
 bool verify_vector(vector<int> vec) {
@@ -260,6 +245,8 @@ void Sudoku::solve() {
            i != candidates->end(); ++i) {
         if (i->candidate_values.size() == 1) {
           sudoku[i->row][i->col] = i->candidate_values[0];
+          if (print_every_step)
+              print_sudoku();
         }
       }
       delete candidates;
@@ -283,6 +270,10 @@ void Sudoku::solve() {
 
         sudoku[bu.candidate_used.row][bu.candidate_used.col] =
             bu.candidate_used.candidate_values[0];
+
+        if (print_every_step)
+            print_sudoku();
+
         delete other_candidates;
         delete all_candidates;
         solve();

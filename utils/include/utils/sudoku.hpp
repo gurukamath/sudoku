@@ -14,11 +14,12 @@ struct BackUp {
 };
 
 class Sudoku {
-private:
+protected:
   std::vector<std::vector<int>> sudoku;
   std::vector<BackUp> backups;
 
-  void print_sudoku();
+  virtual void print_sudoku();
+  int print_every_step {0};
 
   bool is_solved();
 

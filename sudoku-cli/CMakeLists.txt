@@ -5,7 +5,9 @@ add_subdirectory(../utils ../out/utils)
 add_executable(
     sudoku-cli
     main.cpp
-    )
+    sudoku-cli.cpp
+    sudoku-cli.hpp
+)
 
 target_link_libraries(sudoku-cli utils)
 

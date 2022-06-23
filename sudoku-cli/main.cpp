@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "CLI/CLI.hpp"
-#include "utils/sudoku.hpp"
+#include "sudoku-cli.hpp"
 
 using std::vector;
 
@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
   CLI11_PARSE(app, argc, argv);
 
   try {
-    Sudoku new_sudoku(filename);
+    SudokuCli new_sudoku(filename);
     new_sudoku.solve();
   } catch (std::runtime_error &err) {
     if (filename == "") {
@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
                 << std::endl;
     }
 
-    Sudoku new_sudoku;
+    SudokuCli new_sudoku;
     new_sudoku.solve();
   }
 
