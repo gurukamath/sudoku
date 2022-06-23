@@ -7,7 +7,7 @@ add_executable(
     main.cpp
     sudoku-cli.cpp
     sudoku-cli.hpp
-)
+    )
 
 target_link_libraries(sudoku-cli utils)
 
