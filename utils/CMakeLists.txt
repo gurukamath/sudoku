@@ -14,4 +14,4 @@ add_subdirectory(string_split)
 
 target_link_libraries(utils string_split)
 
-target_compile_features(string_split PUBLIC cxx_std_17)
+target_compile_features(utils PUBLIC cxx_std_17)
