@@ -9,3 +9,5 @@ add_subdirectory(utils)
 add_subdirectory(sudoku-cli)
 target_link_libraries(sudoku-cli PUBLIC utils)
 
+add_subdirectory(sudoku-gui)
+target_link_libraries(sudoku-gui PUBLIC utils)

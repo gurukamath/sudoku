@@ -2,12 +2,9 @@
   "name": "sudoku",
   "version": "1.0.0",
   "dependencies": [
-    {
-      "name": "imgui",
-      "features": [ "glfw-binding", "opengl3-binding" ]
-    },
-  "glad",
-  "glfw3",
-  "cli11"
+    "glad",
+    "glfw3",
+    "glew",
+    "cli11"
   ]
 }
