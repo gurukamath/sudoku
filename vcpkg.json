@@ -5,6 +5,7 @@
     "glad",
     "glfw3",
     "glew",
-    "cli11"
+    "cli11",
+    "wxwidgets"
   ]
 }
