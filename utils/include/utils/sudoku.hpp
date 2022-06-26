@@ -19,7 +19,7 @@ protected:
   std::vector<BackUp> backups;
 
   virtual void print_sudoku();
-  int print_every_step {0};
+  int print_every_step{0};
 
   bool is_solved();
 
@@ -34,7 +34,7 @@ protected:
   std::vector<Candidate> find_all_candidates(int);
 
   void process_invalid_state();
-  int counter{ 0 };
+  int counter{0};
 
 public:
   Sudoku();

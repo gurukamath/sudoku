@@ -225,12 +225,12 @@ void Sudoku::process_invalid_state() {
 }
 
 void Sudoku::solve() {
-    if (counter > 1000) {
-        cout << "Could not solve after " << counter << " iterations." << endl;
-        cout << "Will not make more attempts." << endl;
-        return;
+  if (counter > 1000) {
+    cout << "Could not solve after " << counter << " iterations." << endl;
+    cout << "Will not make more attempts." << endl;
+    return;
   }
-    counter++;
+  counter++;
   if (!is_valid()) {
     process_invalid_state();
     solve();
@@ -246,7 +246,7 @@ void Sudoku::solve() {
         if (i->candidate_values.size() == 1) {
           sudoku[i->row][i->col] = i->candidate_values[0];
           if (print_every_step)
-              print_sudoku();
+            print_sudoku();
         }
       }
       delete candidates;
@@ -272,7 +272,7 @@ void Sudoku::solve() {
             bu.candidate_used.candidate_values[0];
 
         if (print_every_step)
-            print_sudoku();
+          print_sudoku();
 
         delete other_candidates;
         delete all_candidates;

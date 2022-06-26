@@ -4,8 +4,8 @@
 
 class SudokuCli : public Sudoku {
 
-    using Sudoku::Sudoku;
+  using Sudoku::Sudoku;
 
 public:
-    void print_sudoku();
+  void print_sudoku();
 };
