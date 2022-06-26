@@ -34,6 +34,7 @@ protected:
   std::vector<Candidate> find_all_candidates(int);
 
   void process_invalid_state();
+  int counter{ 0 };
 
 public:
   Sudoku();

@@ -225,16 +225,16 @@ void Sudoku::process_invalid_state() {
 }
 
 void Sudoku::solve() {
+    if (counter > 1000) {
+        cout << "Could not solve after " << counter << " iterations." << endl;
+        cout << "Will not make more attempts." << endl;
+        return;
+  }
+    counter++;
   if (!is_valid()) {
     process_invalid_state();
     solve();
   } else if (is_solved()) {
-    cout << "\n***********************************************" << endl;
-    cout << "*                                             *" << endl;
-    cout << "* The sudoku has been solved successfully!!!! *" << endl;
-    cout << "*       The solution is displayed below       *" << endl;
-    cout << "*                                             *" << endl;
-    cout << "***********************************************\n" << endl;
     print_sudoku();
   } else {
     vector<Candidate> *candidates =
