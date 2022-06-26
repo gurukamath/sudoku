@@ -15,7 +15,6 @@ public:
 
 private:
   void print_sudoku() override;
-  int print_every_step{1};
   void read_sudoku();
   void on_solve_clicked(wxCommandEvent &evt);
 

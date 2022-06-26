@@ -1,9 +1,11 @@
 #include "utils/sudoku.hpp"
 #include "string_split/string_split.hpp"
 #include <algorithm>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
 #include <vector>
 
 using std::cout;
@@ -224,13 +226,29 @@ void Sudoku::process_invalid_state() {
   }
 }
 
+void Sudoku::handle_maximum_iterations() {
+  cout << "Could not solve after " << counter << " iterations." << endl;
+  cout << "Will not make more attempts." << endl;
+}
+
+void Sudoku::handle_stuck_state() {
+  cout << "Unable to make any further progress using the current "
+          "algorithm. The current status is as follows."
+       << endl;
+  print_sudoku();
+}
+
 void Sudoku::solve() {
   if (counter > 1000) {
-    cout << "Could not solve after " << counter << " iterations." << endl;
-    cout << "Will not make more attempts." << endl;
     return;
   }
   counter++;
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(delay_iterations));
+
+  if (print_every_step)
+    print_sudoku();
+
   if (!is_valid()) {
     process_invalid_state();
     solve();
@@ -245,8 +263,6 @@ void Sudoku::solve() {
            i != candidates->end(); ++i) {
         if (i->candidate_values.size() == 1) {
           sudoku[i->row][i->col] = i->candidate_values[0];
-          if (print_every_step)
-            print_sudoku();
         }
       }
       delete candidates;
@@ -271,9 +287,6 @@ void Sudoku::solve() {
         sudoku[bu.candidate_used.row][bu.candidate_used.col] =
             bu.candidate_used.candidate_values[0];
 
-        if (print_every_step)
-          print_sudoku();
-
         delete other_candidates;
         delete all_candidates;
         solve();
@@ -285,11 +298,7 @@ void Sudoku::solve() {
       } else {
         delete other_candidates;
         delete all_candidates;
-
-        cout << "Unable to make any further progress using the current "
-                "algorithm. The current status is as follows."
-             << endl;
-        print_sudoku();
+        handle_stuck_state();
       }
     }
   }

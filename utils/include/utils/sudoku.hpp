@@ -19,7 +19,8 @@ protected:
   std::vector<BackUp> backups;
 
   virtual void print_sudoku();
-  int print_every_step{0};
+  bool print_every_step{true};
+  int delay_iterations{0};
 
   bool is_solved();
 
@@ -35,6 +36,8 @@ protected:
 
   void process_invalid_state();
   int counter{0};
+  virtual void handle_maximum_iterations();
+  virtual void handle_stuck_state();
 
 public:
   Sudoku();
