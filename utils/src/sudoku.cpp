@@ -26,20 +26,24 @@ vector<vector<int>> prebuilt_zero = {9, {0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 Sudoku::Sudoku() : sudoku{prebuilt} {}
 
+void Sudoku::load_prebuilt(std::string s) {
+    ifstream in;
+    in.open(s);
+    if (!in)
+        throw std::runtime_error("The specified file " + s + " does not exist.");
+
+    string line;
+
+    for (int row = 0; row != 9; ++row) {
+        getline(in, line);
+        vector<int> lst{ split_string(line) };
+
+        sudoku[row] = lst;
+    }
+}
+
 Sudoku::Sudoku(string s) : sudoku{prebuilt_zero} {
-  ifstream in;
-  in.open(s);
-  if (!in)
-    throw std::runtime_error("The specified file " + s + " does not exist.");
-
-  string line;
-
-  for (int row = 0; row != 9; ++row) {
-    getline(in, line);
-    vector<int> lst{split_string(line)};
-
-    sudoku[row] = lst;
-  }
+    load_prebuilt(s);
 }
 
 void Sudoku::print_sudoku() {

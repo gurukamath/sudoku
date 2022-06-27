@@ -19,6 +19,7 @@ protected:
   std::vector<BackUp> backups;
 
   virtual void print_sudoku();
+  void load_prebuilt(std::string);
   bool print_every_step{true};
   int delay_iterations{0};
 
