@@ -3,6 +3,8 @@
 #include "utils/sudoku.hpp"
 #include "wx/wx.h"
 
+
+
 class cMain : public wxFrame, public Sudoku {
 public:
   cMain();
@@ -11,9 +13,10 @@ public:
   const int field_width{9};
   const int field_height{9};
   wxTextCtrl **elements;
-  wxButton *m_btn;
-  wxButton* load_prebuilt_btn;
-  wxComboBox* prebuilt_selector;
+  wxButton *solve_btn = new wxButton(this, 11001, "Solve");
+  wxButton *load_prebuilt_btn;
+  wxComboBox *prebuilt_selector = new wxComboBox(this, wxID_ANY, "Easy", wxDefaultPosition, wxDefaultSize,
+      0, NULL, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB); // TODO: Make combobox uneditable manually and center align
 
 private:
   void print_sudoku() override;
