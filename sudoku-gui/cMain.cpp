@@ -1,13 +1,12 @@
 #include "cMain.hpp"
-#include <string>
 #include <map>
+#include <string>
 
-wxBEGIN_EVENT_TABLE(cMain, wxFrame)
-    EVT_BUTTON(11001, cMain::on_solve_clicked)
+wxBEGIN_EVENT_TABLE(cMain, wxFrame) EVT_BUTTON(11001, cMain::on_solve_clicked)
     EVT_BUTTON(12001, cMain::on_load_prebuilt_clicked)
-wxEND_EVENT_TABLE()
+        EVT_BUTTON(13001, cMain::on_clear_clicked) wxEND_EVENT_TABLE()
 
-cMain::cMain()
+            cMain::cMain()
     : wxFrame(nullptr, wxID_ANY, "Sudoku"), Sudoku() {
 
   wxBoxSizer *main_box = new wxBoxSizer(wxVERTICAL);
@@ -22,28 +21,22 @@ cMain::cMain()
 
       elements[j * field_width + i] =
           new wxTextCtrl(this, 10000 + (j * field_width + i), "");
-      grid->Add(elements[j * field_width + i], 1, wxEXPAND | wxALL); //TODO: Center align the text
+      grid->Add(elements[j * field_width + i], 1,
+                wxEXPAND | wxALL); // TODO: Center align the text
     }
   }
-
-  prebuilt_selector->Append("Easy");
-  prebuilt_selector->Append("Medium");
-  prebuilt_selector->Append("Hard");
-  prebuilt_selector->Append("Expert");
-  prebuilt_selector->Select(0);
-
-  load_prebuilt_btn
-  = new wxButton(this, 12001, "Load Pre-Built"); //TODO: center align the button
 
   main_box->Add(prebuilt_selector, 1);
   main_box->Add(load_prebuilt_btn, 1);
   main_box->Add(grid, 9, wxEXPAND | wxALL);
   main_box->Add(solve_btn, 1);
+  main_box->Add(clear_btn, 1);
 
   this->SetSizer(main_box);
   main_box->Layout();
 }
 
+// Override print function to suite the GUI
 void cMain::print_sudoku() {
   for (int i = 0; i < field_width; i++) {
     for (int j = 0; j < field_height; j++) {
@@ -59,6 +52,8 @@ void cMain::print_sudoku() {
   }
 }
 
+// Save the sudoku that is currently displayed on the GUI
+// into the object
 void cMain::read_sudoku() {
   for (int i = 0; i < field_width; i++) {
     for (int j = 0; j < field_height; j++) {
@@ -72,6 +67,13 @@ void cMain::read_sudoku() {
   }
 }
 
+// Define Event Handler functions
+void cMain::on_solve_clicked(wxCommandEvent &evt) {
+  read_sudoku();
+  solve();
+  evt.Skip();
+}
+
 std::map<std::string, std::string> prebuilt_map{
     {"Easy", "../../../../more_examples/easy_1.txt"},
     {"Medium", "../../../../more_examples/medium_1.txt"},
@@ -81,19 +83,21 @@ std::map<std::string, std::string> prebuilt_map{
 
 void cMain::on_load_prebuilt_clicked(wxCommandEvent &evt) {
 
-    wxString selection{ prebuilt_selector->GetValue() };
-    std::string prebuilt_file{prebuilt_map[(std::string)selection]};
-    //std::string prebuilt_file{ prebuilt_map["Expert"] };
+  wxString selection{prebuilt_selector->GetValue()};
+  std::string prebuilt_file{prebuilt_map[(std::string)selection]};
 
-    load_prebuilt(prebuilt_file);
-    print_sudoku();
-    evt.Skip();
+  load_prebuilt(prebuilt_file);
+  print_sudoku();
+  evt.Skip();
 }
 
-void cMain::on_solve_clicked(wxCommandEvent &evt) {
-  read_sudoku();
-  solve();
-  evt.Skip();
+void cMain::on_clear_clicked(wxCommandEvent &evt) {
+  for (int i = 0; i < field_width; i++) {
+    for (int j = 0; j < field_height; j++) {
+      sudoku[i][j] = 0;
+    }
+  }
+  print_sudoku();
 }
 
 cMain::~cMain() { delete[] elements; }
