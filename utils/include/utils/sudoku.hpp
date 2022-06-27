@@ -20,7 +20,7 @@ protected:
 
   virtual void print_sudoku();
   void load_prebuilt(std::string);
-  bool print_every_step{true};
+  bool print_every_step{false};
   int delay_iterations{0};
 
   bool is_solved();
