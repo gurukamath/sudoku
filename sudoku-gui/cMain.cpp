@@ -11,6 +11,12 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame) EVT_BUTTON(11001, cMain::on_solve_clicked)
 
   wxBoxSizer *main_box = new wxBoxSizer(wxVERTICAL);
 
+  wxBoxSizer* top_button_box = new wxBoxSizer(wxHORIZONTAL);
+
+  wxBoxSizer* bottom_button_box = new wxBoxSizer(wxHORIZONTAL);
+
+  prebuilt_selector->SetSelection(0);
+
   const int n_text = field_width * field_height;
 
   elements = new wxTextCtrl *[n_text];
@@ -20,17 +26,27 @@ wxBEGIN_EVENT_TABLE(cMain, wxFrame) EVT_BUTTON(11001, cMain::on_solve_clicked)
     for (int j = 0; j < field_height; j++) {
 
       elements[j * field_width + i] =
-          new wxTextCtrl(this, 10000 + (j * field_width + i), "");
+          new wxTextCtrl(this, 10000 + (j * field_width + i), "", wxDefaultPosition, wxDefaultSize, wxTE_CENTRE);
       grid->Add(elements[j * field_width + i], 1,
-                wxEXPAND | wxALL); // TODO: Center align the text
+                wxEXPAND | wxALL);
     }
   }
 
-  main_box->Add(prebuilt_selector, 1);
-  main_box->Add(load_prebuilt_btn, 1);
-  main_box->Add(grid, 9, wxEXPAND | wxALL);
-  main_box->Add(solve_btn, 1);
-  main_box->Add(clear_btn, 1);
+  // Add items to the layout
+
+  // Add loader items to the first Box
+  top_button_box->Add(prebuilt_label, 1, wxLEFT | wxCENTER, 10);
+  top_button_box->Add(prebuilt_selector, 1, wxRIGHT | wxCENTER);
+  top_button_box->Add(load_prebuilt_btn, 1, wxLEFT | wxCENTER, 20);
+  main_box->Add(top_button_box, 1, wxALL, 20);
+
+  // Add the sudoku grid to the layout
+  main_box->Add(grid, 9, wxEXPAND | wxLEFT | wxRIGHT, 20);
+
+  // Add items to the bottom button box
+  bottom_button_box->Add(solve_btn, 1, wxLEFT | wxRIGHT | wxCENTER, 50);
+  bottom_button_box->Add(clear_btn, 1, wxLEFT | wxRIGHT | wxCENTER, 50);
+  main_box->Add(bottom_button_box, 1, wxALL, 20);
 
   this->SetSizer(main_box);
   main_box->Layout();
@@ -83,7 +99,7 @@ std::map<std::string, std::string> prebuilt_map{
 
 void cMain::on_load_prebuilt_clicked(wxCommandEvent &evt) {
 
-  wxString selection{prebuilt_selector->GetValue()};
+  wxString selection{prebuilt_selector->GetString(prebuilt_selector->GetCurrentSelection())};
   std::string prebuilt_file{prebuilt_map[(std::string)selection]};
 
   load_prebuilt(prebuilt_file);

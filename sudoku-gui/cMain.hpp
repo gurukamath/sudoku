@@ -15,16 +15,19 @@ private:
   // Widgets
   const int field_width{9};
   const int field_height{9};
-  wxTextCtrl **elements;
-  wxButton *solve_btn = new wxButton(this, 11001, "Solve");
+  
+  wxStaticText* prebuilt_label = new wxStaticText(this, wxID_ANY, "Choose Pre-Built");
   wxButton *load_prebuilt_btn = new wxButton(
-      this, 12001, "Load Pre-Built"); // TODO: center align the button;
-  wxButton *clear_btn = new wxButton(this, 13001, "Clear");
-  wxComboBox *prebuilt_selector = new wxComboBox(
-      this, wxID_ANY, _T("Easy"), wxDefaultPosition, wxDefaultSize, 4,
+      this, 12001, "Load Pre-Built");
+  wxChoice *prebuilt_selector = new wxChoice(
+      this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 4,
       prebuilt_options,
-      wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB); // TODO: Make combobox uneditable
-                                              // manually and center align
+      wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
+
+  wxTextCtrl** elements;
+
+  wxButton* solve_btn = new wxButton(this, 11001, "Solve");
+  wxButton* clear_btn = new wxButton(this, 13001, "Clear");
 
   void print_sudoku() override;
   void read_sudoku();
